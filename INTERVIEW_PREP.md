@@ -51,7 +51,79 @@ An interviewer will want to see if you understand *why* you chose your stack. He
 
 ---
 
-## 🔍 3. Under-the-Hood Code Highlights (Show You Know the Code)
+## 📂 3. Repository File-by-File Purpose Map
+
+Here is the exact purpose and function of every single file remaining in your codebase. If the interviewer asks, *"What does file X do?"*, this is your cheat sheet:
+
+### 📄 Root Directory (Configuration & Documentation)
+* **[ACADEMIC_REPORT.md](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/ACADEMIC_REPORT.md)**
+  * *Purpose*: The formal university academic thesis for SWE4010. Contains problem statement, objectives, full theoretical foundations (WER metrics, models, etc.), and complete performance evaluations.
+* **[INTERVIEW_PREP.md](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/INTERVIEW_PREP.md)**
+  * *Purpose*: This file! A tailored strategic playbook for technical interviews, linking code architecture to systems design principles.
+* **[README.md](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/README.md)**
+  * *Purpose*: The public repository homepage. Provides developer context, project capabilities, architectural flow, and REST API specification.
+* **[SETUP.md](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/SETUP.md)**
+  * *Purpose*: The environment setup documentation, guiding manual dependency installations (FFmpeg, Node, Python) and server startups.
+* **[RUN_ME.bat](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/RUN_ME.bat)**
+  * *Purpose*: A Windows automation batch script that fires up both the backend Uvicorn server and Vite frontend compiler in separate terminal windows.
+* **[start-backend.bat](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/start-backend.bat) & [start-frontend.bat](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/start-frontend.bat)**
+  * *Purpose*: Helper startup scripts that navigate directories and run isolated dev servers.
+* **[.gitignore](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/.gitignore)**
+  * *Purpose*: Essential Git filter that prevents committing heavy media (`uploads/`), local database files (`*.db`), node modules, virtual environments (`venv`), or API credentials (`.env`).
+
+### 🐍 Backend Service Layer (`backend/`)
+* **[main.py](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/backend/main.py)**
+  * *Purpose*: The FastAPI core web server. Defines all RESTful API endpoints (upload, search, bookmarks, stream, etc.), handles CORS rules, and schedules the asynchronous background workers for transcribing/embedding processing.
+* **[database.py](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/backend/database.py)**
+  * *Purpose*: The sqlite3 database connection manager and CRUD layer. Initializes schemas and handles binary serialization (`ndarray.tobytes()`) and reconstitution (`np.frombuffer()`) of dense embeddings.
+* **[transcription.py](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/backend/transcription.py)**
+  * *Purpose*: Speech-to-text service wrapping OpenAI's Whisper model (`base`), loading the weights, extracting audio from video uploads, and returning timestamps aligned to words.
+* **[embeddings.py](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/backend/embeddings.py)**
+  * *Purpose*: Vector logic wrapping the `all-MiniLM-L6-v2` Sentence Transformer. Encodes textual strings, computes cosine similarity matrices, and calculates semantic changes to determine topic transition boundaries.
+* **[ai_summarizer.py](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/backend/ai_summarizer.py)**
+  * *Purpose*: Handles LLM summary and flashcard generation via `gemini-2.0-flash-001`. Features a strict Singleton pattern, 2-second rate-limiting protection, JSON regex cleanup, and robust offline fallback string parsers.
+* **[requirements.txt](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/backend/requirements.txt)**
+  * *Purpose*: Lists pinned Python package dependencies for simple pip environment boots.
+* **[backend/.env.example](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/backend/.env.example)**
+  * *Purpose*: Example environmental configuration template containing empty credentials fields (`GEMINI_API_KEY`) to guide local configuration.
+
+### ⚛️ Frontend UI Layer (`frontend/`)
+* **[index.html](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/index.html)**
+  * *Purpose*: The entry point static HTML document where React mounts the virtual DOM.
+* **[package.json](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/package.json)**
+  * *Purpose*: Node configuration defining core app scripts (`dev`, `build`), target browsers, and external libraries (like React, Tailwind, Lucide Icons, react-player).
+* **[vite.config.js](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/vite.config.js)**
+  * *Purpose*: Configures Vite build settings, asset pathways, and development proxies.
+* **[tailwind.config.js](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/tailwind.config.js) & [postcss.config.js](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/postcss.config.js)**
+  * *Purpose*: Configures Tailwind design tokens, layouts, colors, and responsive utilities.
+* **[src/main.jsx](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/main.jsx)**
+  * *Purpose*: Standard React entry point that binds standard DOM queries to the App layout.
+* **[src/App.jsx](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/App.jsx)**
+  * *Purpose*: Root React component managing view swaps between the Video Manager list view, Video Upload panel, and the main interactive Video Player screen.
+* **[src/index.css](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/index.css)**
+  * *Purpose*: Custom stylesheet loading Tailwind primitives.
+* **[src/api/client.js](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/api/client.js)**
+  * *Purpose*: Centralized REST client wrapper mapping asynchronous `fetch` actions to FastAPI pathways (like uploads, searches, exports, and summaries).
+* **[src/utils/formatTime.js](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/utils/formatTime.js)**
+  * *Purpose*: Utility formatting raw seconds into a tidy timestamp format (e.g. `125` becomes `2:05`).
+
+#### 📦 Components (`frontend/src/components/`)
+* **[VideoUpload.jsx](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/components/VideoUpload.jsx)**
+  * *Purpose*: Drag-and-drop workspace uploader offering progress percentage bars and type checks.
+* **[VideoPlayer.jsx](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/components/VideoPlayer.jsx)**
+  * *Purpose*: The application centerpiece. Houses `react-player`, hooks up the `Ctrl+B` keyboard bookmark event listeners, streams video data, and opens the summary overlays.
+* **[BookmarksList.jsx](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/components/BookmarksList.jsx)**
+  * *Purpose*: Sidebar bookmarks organizer rendering tags, user notes, transcript context, and AI summaries, linking click actions to seek locations.
+* **[SemanticSearch.jsx](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/components/SemanticSearch.jsx)**
+  * *Purpose*: The search input UI, retrieving and rendering cosine relevance matches as percentages (`92% match`) and enabling click-to-seek jump points.
+* **[VideoManager.jsx](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/components/VideoManager.jsx)**
+  * *Purpose*: Dashboard managing list selection, metadata polling, and deleting records.
+* **[SearchTest.jsx](file:///c:/Users/HP/Downloads/Bookie-main/Bookie-main/frontend/src/components/SearchTest.jsx)**
+  * *Purpose*: A debug interface used to experiment with manual queries on the active video ID.
+
+---
+
+## 🔍 4. Under-the-Hood Code Highlights (Show You Know the Code)
 
 Be prepared to explain these three specific implementation details. They showcase excellent engineering practices.
 
